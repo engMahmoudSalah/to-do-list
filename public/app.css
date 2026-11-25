@@ -12,3 +12,15 @@
 .landing .feat{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin:28px 0}
 .mv{display:flex;gap:4px;margin-top:6px}
 @media(max-width:640px){.col{min-width:84vw;width:84vw}.cal .day{min-height:60px}.cal .ev{font-size:.66rem}}
+body{background-image:radial-gradient(color-mix(in srgb,var(--border) 70%,transparent) 1px,transparent 1.2px);background-size:22px 22px}
+.ob{display:inline-block}.ob svg{width:100%;height:100%}.obr{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2.5}.obc{fill:none;stroke:var(--accent);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:tick .7s .25s ease forwards}
+@keyframes tick{to{stroke-dashoffset:0}}
+.oe .g1,.oe .g2,.oe .g3{fill:var(--surface);stroke:var(--border);stroke-width:2;stroke-dasharray:5 4}.oe .g1{stroke:var(--accent);stroke-dasharray:0}.oe .gl{fill:var(--accent)}.oe .gl2{fill:var(--border)}.oe .gp{fill:var(--accent-soft);stroke:var(--accent);stroke-width:2}.oe .gt{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.oe .gcard{animation:ofloat 3.6s ease-in-out infinite}@keyframes ofloat{50%{transform:translate(4px,-7px)}}
+.kh{max-width:420px;margin:0 auto 14px}.kcol rect{fill:var(--surface2);stroke:var(--border);stroke-width:1.5}.khd rect{fill:var(--border)}
+.kc rect:first-child{fill:var(--surface);stroke:var(--border);stroke-width:1.5}.kc .kl{fill:var(--muted);opacity:.5;stroke:none}.kc.dn rect:first-child{stroke:var(--accent)}.kt{fill:none;stroke:var(--accent);stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.kmove{animation:kmove 9s ease-in-out infinite}.kc.hot rect:first-child{stroke:var(--accent);stroke-width:2}.kt2{opacity:0;animation:kshow 9s infinite}
+@keyframes kmove{0%,10%{transform:translate(0,0)}35%,45%{transform:translate(120px,-40px)}70%,85%{transform:translate(240px,-80px)}100%{transform:translate(0,0)}}
+@keyframes kshow{0%,66%{opacity:0}72%,90%{opacity:1}100%{opacity:0}}
+.tcard{transition:transform .2s ease,border-color .2s}.tcard:hover{transform:translateY(-3px);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){.kmove,.kt2,.oe .gcard,.obc{animation:none}.obc{stroke-dashoffset:0}.kmove{transform:translate(240px,-80px)}.kt2{opacity:1}}
