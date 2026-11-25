@@ -29,3 +29,4 @@ body{background-image:radial-gradient(color-mix(in srgb,var(--border) 70%,transp
 .langbtn{font-weight:700;min-width:44px}
 [dir=rtl] .nav{direction:rtl}[dir=rtl] th,[dir=rtl] td{text-align:start}
 [dir=rtl] input[type=email],[dir=rtl] input[type=password],[dir=rtl] input[type=url],[dir=rtl] input[type=datetime-local],[dir=rtl] input[type=date]{direction:ltr;text-align:right}
+[dir=rtl] button[aria-label="نقل لليمين"],[dir=rtl] button[aria-label="نقل لليسار"]{transform:scaleX(-1)}
