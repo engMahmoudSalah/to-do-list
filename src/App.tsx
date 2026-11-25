@@ -25,6 +25,7 @@ import {
 
 // image imports
 import logo from './images/logo.jpeg';
+import SyncPanel from './SyncPanel';
 
 // --- اقتباسات ساخرة ---
 const SARCASTIC_QUOTES = [
@@ -589,6 +590,7 @@ export default function App() {
               <CalendarIcon size={16} className="text-indigo-400" />
               <span>{currentDate}</span>
             </div>
+            <SyncPanel tasks={tasks} onRestore={setTasks} />
             <button 
               onClick={requestNotificationPermission}
               className={`p-2 rounded-full transition-colors ${notificationsEnabled ? 'text-indigo-400 bg-indigo-500/10' : 'text-slate-400 hover:bg-white/5 hover:text-white'}`}
