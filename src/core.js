@@ -112,7 +112,7 @@ export class BaseHub extends DurableObject {
     const { path, method, body } = c;
     if (!path.startsWith("/api/")) return null;
     if (path === "/api/auth/register" && method === "POST") {
-      this.limit("reg:" + c.ip, 8, 3600e3);
+      this.limit("reg:" + c.ip, 25, 3600e3);
       const email = clean(body.email, 200).toLowerCase(), name = clean(body.name, 60), pw = String(body.password || "");
       if (!isEmail(email)) bad("Enter a valid email address.");
       if (name.length < 2) bad("Enter your name (at least 2 characters).");

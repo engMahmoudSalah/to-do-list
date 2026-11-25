@@ -69,9 +69,9 @@ export function authForm(onAuthed, opts = {}) {
     box.innerHTML = "";
     const email = h("input", { type: "email", autocomplete: "email", required: true, placeholder: t("you@example.com") });
     const name = h("input", { type: "text", autocomplete: "name", placeholder: t("Your name"), maxlength: 60 });
-    const pw = h("input", { type: "password", autocomplete: mode === "login" ? "current-password" : "new-password", placeholder: mode === "login" ? "Password" : t("At least 8 characters") });
+    const pw = h("input", { type: "password", autocomplete: mode === "login" ? "current-password" : "new-password", placeholder: mode === "login" ? t("Password") : t("At least 8 characters") });
     const err = h("div", { class: "err", role: "alert" });
-    const btn = h("button", { class: "btn pri", type: "submit" }, mode === "login" ? "Log in" : t("Create account"));
+    const btn = h("button", { class: "btn pri", type: "submit" }, mode === "login" ? t("Log in") : t("Create account"));
     const form = h("form", { class: "stack", novalidate: true, onsubmit: async (e) => {
       e.preventDefault(); err.textContent = "";
       if (!email.value.trim()) return (err.textContent = t("Enter your email."));
@@ -83,9 +83,9 @@ export function authForm(onAuthed, opts = {}) {
       } catch (x) { err.textContent = x.message; } finally { btn.disabled = false; }
     } },
       mode === "signup" ? field(t("Name"), name) : null, field(t("Email"), email), field(t("Password"), pw), err, btn);
-    box.append(h("h2", {}, opts.title || (mode === "login" ? "Welcome back" : t("Create your account"))), opts.sub ? h("p", { class: "muted" }, opts.sub) : null, form,
-      h("p", { class: "small muted" }, mode === "login" ? "New here? " : t("Already have an account? "),
-        h("a", { href: "#", onclick: (e) => { e.preventDefault(); mode = mode === "login" ? "signup" : "login"; render(); } }, mode === "login" ? "Create an account" : t("Log in"))));
+    box.append(h("h2", {}, opts.title || (mode === "login" ? t("Welcome back") : t("Create your account"))), opts.sub ? h("p", { class: "muted" }, opts.sub) : null, form,
+      h("p", { class: "small muted" }, mode === "login" ? t("New here? ") : t("Already have an account? "),
+        h("a", { href: "#", onclick: (e) => { e.preventDefault(); mode = mode === "login" ? "signup" : "login"; render(); } }, mode === "login" ? t("Create an account") : t("Log in"))));
   };
   render(); return box;
 }
@@ -99,7 +99,7 @@ export function adminView(extraTitle, renderApp) {
   const root = h("div", { class: "stack" });
   const load = async () => {
     let d; try { d = await api("/api/admin/overview"); } catch (e) {
-      root.innerHTML = ""; root.append(h("div", { class: "card stack" }, h("h2", {}, t("Admin")), h("p", { class: "muted" }, e.status === 403 ? "You are not an admin. If you own this site, enter the admin key to claim access." : e.message),
+      root.innerHTML = ""; root.append(h("div", { class: "card stack" }, h("h2", {}, t("Admin")), h("p", { class: "muted" }, e.status === 403 ? t("You are not an admin. If you own this site, enter the admin key to claim access.") : e.message),
         e.status === 403 ? claimForm(load) : null)); return;
     }
     root.innerHTML = "";
@@ -118,7 +118,7 @@ export function adminView(extraTitle, renderApp) {
 }
 function claimForm(done) {
   const k = h("input", { type: "password", placeholder: t("Admin key"), autocomplete: "off" });
-  return h("form", { class: "row", onsubmit: (e) => { e.preventDefault(); guard(async () => { await api("/api/admin/claim", { key: k.value }); toast("Admin access granted"); done(); }); } }, k, h("button", { class: "btn pri" }, t("Claim")));
+  return h("form", { class: "row", onsubmit: (e) => { e.preventDefault(); guard(async () => { await api("/api/admin/claim", { key: k.value }); toast(t("Admin access granted")); done(); dispatchEvent(new Event("adminclaimed")); }); } }, k, h("button", { class: "btn pri" }, t("Claim")));
 }
 import { SITES } from "/sites.js";
 const SVG = (kids) => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${kids}</svg>`;
