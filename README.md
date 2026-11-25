@@ -1,4 +1,4 @@
-# To-Do List
+# Orbit Tasks
 
 Task manager with categories, priorities and end-to-end encrypted cloud sync.
 
