@@ -40,3 +40,11 @@ table{width:100%;border-collapse:collapse}th,td{text-align:start;padding:9px 10p
 .floaty{animation:floaty 5s ease-in-out infinite}
 @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.floaty{animation:none}*{scroll-behavior:auto!important}}
 .fxwrap>.fxbg{z-index:0}.fxwrap>*:not(.fxbg){position:relative;z-index:1}
+.scrollbar{position:fixed;top:0;left:0;right:0;height:3px;background:var(--accent);transform:scaleX(0);transform-origin:0 50%;z-index:60;pointer-events:none}[dir=rtl] .scrollbar{transform-origin:100% 50%}
+.ambient{position:fixed;inset:0;width:100%;height:100%;z-index:0;opacity:.28;pointer-events:none}.topbar,main,.sitefoot{position:relative;z-index:1}.topbar{position:sticky}
+@keyframes pagein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}main>*{animation:pagein .45s ease both}
+.medal{display:inline-grid;place-items:center;border-radius:50%;background:var(--accent-soft);color:var(--accent);flex:none}.medal svg{width:88%;height:88%}
+@keyframes spin{to{transform:rotate(360deg)}}.medal .mr{transform-origin:32px 32px;animation:spin 24s linear infinite}
+.hbadge{display:inline-block;width:44px;height:44px;flex:none}.hwire{background:var(--accent-soft);border-radius:50%;overflow:hidden}
+.emptyart{display:flex;justify-content:center;margin-bottom:6px}.plan,.tier{transition:transform .2s ease}
+@media (prefers-reduced-motion:reduce){main>*{animation:none}.medal .mr{animation:none}}

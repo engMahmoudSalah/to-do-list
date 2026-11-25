@@ -51,3 +51,48 @@ export function tilt(el) {
 }
 // hero with a canvas layer: art(kind) -> element to place behind/beside the content
 export function canvasEl(kind, shape) { const c = document.createElement("canvas"); c.className = "fxc fx-" + kind; c.setAttribute("aria-hidden", "true"); queueMicrotask(() => requestAnimationFrame(() => (kind === "wire" ? wire(c, shape) : particles(c)))); return c; }
+
+// ---- Auto-enhancement for every page: header badges, empty-state art, stat count-up, scroll progress, page transitions, ambient background ----
+const G = {
+  board: "M10 14h12v36H10zM26 14h12v24H26zM42 14h12v30H42z", calendar: "M10 16h44v36H10zM10 26h44M20 10v10M44 10v10M20 36h6M32 36h6M44 36h4M20 44h6M32 44h6",
+  inbox: "M8 36l8-20h32l8 20v14H8zM8 36h16l4 6h8l4-6h16", link: "M26 38l12-12M22 30l-6 6a8 8 0 0012 12l6-6M42 34l6-6a8 8 0 00-12-12l-6 6",
+  home: "M8 32L32 10l24 22M14 28v26h36V28M26 54V38h12v16", ticket: "M8 18h48v10a5 5 0 000 10v10H8V38a5 5 0 000-10zM40 18v6M40 30v4M40 40v8",
+  shield: "M32 8l20 8v16c0 14-9 22-20 26C21 54 12 46 12 32V16zM24 32l6 6 10-12", rocket: "M32 8c10 6 14 18 10 32H22C18 26 22 14 32 8zM22 40l-8 8M42 40l8 8M28 48v8M36 48v8M32 26v.1",
+  user: "M32 30a10 10 0 100-20 10 10 0 000 20zM12 56c0-12 8-18 20-18s20 6 20 18", heart: "M32 54S8 40 8 24a12 12 0 0124-4 12 12 0 0124 4c0 16-24 30-24 30z",
+  search: "M28 46a18 18 0 100-36 18 18 0 000 36zM42 42l14 14", box: "M10 24l22-12 22 12v22L32 58 10 46zM10 24l22 12 22-12M32 36v22",
+};
+export const medallion = (glyph, size = 96) => `<span class="medal" style="width:${size}px;height:${size}px" aria-hidden="true"><svg viewBox="0 0 64 64" class="mg"><circle class="mr" cx="32" cy="32" r="30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 6" opacity=".55"/><g class="gl" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" transform="translate(12 12) scale(.62)"><path d="${G[glyph] || G.box}"/></g></svg></span>`;
+function routeGlyph(txt) {
+  const p = (location.hash + " " + location.pathname).toLowerCase(); const pick = [[/admin/, "shield"], [/plans/, "rocket"], [/account/, "user"], [/login/, "user"], [/lookup|search/, "search"], [/ticket|\/t\/|checkin/, "ticket"], [/by-mahmoud/, "link"], [/fav/, "heart"], [/calendar/, "calendar"], [/inbox|inq|mine\b.*inq/, "inbox"], [/board|\/b\/|ws|dash|mine/, "board"], [/\/l\//, "home"], [/\/s\//, "link"]];
+  for (const [r, g] of pick) if (r.test(p)) return g;
+  const host = location.hostname; return host.startsWith("stools") ? "link" : host.startsWith("real") ? "home" : host.startsWith("event") ? "ticket" : "board";
+}
+const WIREFOR = { admin: "cube", plans: "ring", account: "ico" };
+let scheduled = false;
+function enhance() {
+  scheduled = false; const main = document.querySelector("main"); if (!main) return;
+  const key = routeGlyph(); const hash = location.hash;
+  const h1 = main.querySelector("h1");
+  if (h1 && !h1.dataset.fx && !h1.closest(".hero,.hero2,.evhero,.landing,.auth,.modal")) {
+    h1.dataset.fx = "1"; h1.style.display = "flex"; h1.style.alignItems = "center"; h1.style.gap = "12px";
+    const w = Object.keys(WIREFOR).find((k) => hash.includes(k)); const slot = document.createElement("span"); slot.className = "hbadge";
+    if (w) { slot.className += " hwire"; const c = document.createElement("canvas"); c.className = "fxc"; c.setAttribute("aria-hidden", "true"); slot.append(c); h1.prepend(slot); requestAnimationFrame(() => wire(c, WIREFOR[w])); }
+    else { slot.innerHTML = medallion(key, 44); h1.prepend(slot); }
+  }
+  main.querySelectorAll(".empty").forEach((e) => { if (e.dataset.fx) return; e.dataset.fx = "1"; const t = (e.textContent || "").toLowerCase(); const g = /match|search|no results|مطابق/.test(t) ? "search" : /ticket/.test(t) ? "ticket" : /event|stash|link|collection/.test(t) ? key : key === "shield" ? "box" : key; const d = document.createElement("div"); d.className = "emptyart floaty"; d.innerHTML = medallion(g, 96); e.prepend(d); e.style.textAlign = "center"; });
+  main.querySelectorAll(".stat").forEach((e) => {
+    if (e.dataset.fx) return; e.dataset.fx = "1"; const m = /^(\d[\d,]*)$/.exec(e.textContent.trim()); if (!m || reduced()) return; const end = +m[1].replace(/,/g, ""); if (!end || end > 1e7) return;
+    const t0 = performance.now(); const step = (t) => { const k = Math.min(1, (t - t0) / 800); e.textContent = Math.round(end * (1 - Math.pow(1 - k, 3))).toLocaleString("en-US"); if (k < 1 && e.isConnected) requestAnimationFrame(step); else e.textContent = String(m[1]); }; e.textContent = "0"; requestAnimationFrame(step);
+  });
+  const cards = [...main.querySelectorAll(".plan,.card.tier,.stat")].map((e) => e.closest(".card") || e); cards.forEach((c) => { if (!c.dataset.fx2) { c.dataset.fx2 = "1"; c.classList.add("reveal"); tilt(c); } });
+  reveal(main);
+}
+function schedule() { if (!scheduled) { scheduled = true; requestAnimationFrame(enhance); } }
+export function install() {
+  if (window.__fxInstalled) return; window.__fxInstalled = true;
+  const bar = document.createElement("div"); bar.className = "scrollbar"; bar.setAttribute("aria-hidden", "true"); document.body.append(bar);
+  const upd = () => { const d = document.documentElement; const m = d.scrollHeight - innerHeight; bar.style.transform = `scaleX(${m > 0 ? Math.min(1, scrollY / m) : 0})`; }; addEventListener("scroll", upd, { passive: true }); addEventListener("resize", upd);
+  const bg = document.createElement("canvas"); bg.className = "ambient"; bg.setAttribute("aria-hidden", "true"); document.body.prepend(bg); particles(bg, 28);
+  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true }); schedule();
+}
+install();
