@@ -19,4 +19,5 @@ export const SITES = [
   ["Foda Salama", "🎓", "https://foda-salama.mahmodsalah.workers.dev/", "School website for Foda Salama Primary School."],
   ["Right Water", "💧", "https://right-water.mahmodsalah.workers.dev/", "Water services company site with a clean, fresh look."],
   ["Login Sahl", "🔑", "https://login-sahl.mahmodsalah.workers.dev/", "Simplified login and onboarding experience."],
+  ["Lerne Deutsch", "🇩🇪", "https://lerne-deutsch.mahmodsalah.workers.dev/", "Arabic-first German course: personal learning path, A1 to B1 lessons with audio, exercises and spaced review."],
 ];
