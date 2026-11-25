@@ -1,4 +1,4 @@
-import { $, h, api, toast, guard, modal, fmtDate, fmtTime, ago, initTheme, field, authForm, plansView, adminView } from "/kit.js";
+import { $, h, api, siteFooter, toast, guard, modal, fmtDate, fmtTime, ago, initTheme, field, authForm, plansView, adminView } from "/kit.js";
 const toggleTheme = initTheme();
 const S = { user: null, unread: 0 };
 const app = $("#app");
@@ -14,7 +14,7 @@ function shell(content, active) {
     [["#/", "Workspaces", "home"], ["#/my", "My tasks", "my"], ["#/notes", `Inbox${S.unread ? " (" + S.unread + ")" : ""}`, "notes"], ["#/plans", "Plans", "plans"], ["#/account", "Account", "account"]]
       .concat(S.user && S.user.role === "admin" ? [["#/admin", "Admin", "admin"]] : []).map(([href, t, k]) => h("a", { href, class: active === k ? "on" : "" }, t)));
   app.replaceChildren(h("header", { class: "topbar" }, h("div", { class: "in" }, h("a", { class: "brand", href: "#/" }, h("span", { class: "lg" }, "◎"), h("span", {}, "Orbit")), nav,
-    h("button", { class: "btn sm", "aria-label": "Toggle dark mode", onclick: toggleTheme }, "◐"))), h("main", {}, content));
+    h("button", { class: "btn sm", "aria-label": "Toggle dark mode", onclick: toggleTheme }, "◐"))), h("main", {}, content), siteFooter());
 }
 function landing() {
   const box = h("div", { class: "landing" });
@@ -22,7 +22,7 @@ function landing() {
     h("main", {}, h("div", { class: "hero" }, h("h1", {}, "Tasks your whole team can keep up with"), h("p", { class: "muted", style: "max-width:560px;margin:0 auto 20px" }, "Workspaces, invites, kanban boards, repeating tasks, reminders and a calendar. Free for small teams.")),
       h("div", { class: "row", style: "justify-content:center;align-items:flex-start;gap:26px" },
         authForm((u) => { S.user = u; route(); }, { title: "Start with Orbit", sub: "Log in or create a free account." })),
-      h("div", { class: "feat" }, [["Boards", "Drag tasks across columns. On a phone, use the move buttons."], ["Repeat and remind", "Daily, weekday, weekly or monthly tasks that roll forward when done."], ["Invite your team", "Share a link. Pick owner, admin, member or viewer."], ["Calendar", "See due dates by month and open a task with one tap."]].map(([a, b]) => h("div", { class: "card" }, h("h3", {}, a), h("p", { class: "muted" }, b))))));
+      h("div", { class: "feat" }, [["Boards", "Drag tasks across columns. On a phone, use the move buttons."], ["Repeat and remind", "Daily, weekday, weekly or monthly tasks that roll forward when done."], ["Invite your team", "Share a link. Pick owner, admin, member or viewer."], ["Calendar", "See due dates by month and open a task with one tap."]].map(([a, b]) => h("div", { class: "card" }, h("h3", {}, a), h("p", { class: "muted" }, b))))), siteFooter());
 }
 async function refreshUnread() { try { S.unread = (await api("/api/notes")).unread; } catch { /* ignore */ } }
 

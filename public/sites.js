@@ -1,0 +1,22 @@
+// Canonical footer list (from the portfolio agent, verified live): [name, emoji icon, url]
+export const SITES = [
+  ["MD Portfolio", "🌐", "https://md.mahmodsalah.workers.dev/"],
+  ["German File Kit", "📄", "https://german-file-kit.mahmodsalah.workers.dev/"],
+  ["SIM Services", "📱", "https://sim-service.mahmodsalah.workers.dev/"],
+  ["Meetly", "🎥", "https://meetly.mahmodsalah.workers.dev/"],
+  ["Velocity Workspace", "📋", "https://project-manageiment-tool-9014.ai.studio/"],
+  ["Fakhama Luxury Store", "💎", "https://fakhama.mahmodsalah.workers.dev/"],
+  ["WASLA", "💼", "https://wasla.mahmodsalah.workers.dev/"],
+  ["Quill", "🪶", "https://blogging-platform.mahmodsalah.workers.dev/"],
+  ["Stash", "🔖", "https://stools.mahmodsalah.workers.dev/"],
+  ["Naturix", "🍳", "https://naturix.mahmodsalah.workers.dev/"],
+  ["TaqwaShield AI", "🛡️", "https://taqwa-shield-ai.mahmodsalah.workers.dev/"],
+  ["AI Summit", "📅", "https://event-page.mahmodsalah.workers.dev/"],
+  ["Orbit Tasks", "✅", "https://to-do-list.mahmodsalah.workers.dev/"],
+  ["Aqar Real Estate", "🏢", "https://real-state.mahmodsalah.workers.dev/"],
+  ["Magic Convertor", "✨", "https://magic-convertor.mahmodsalah.workers.dev/"],
+  ["Children Skills", "🧒", "https://children-skills.mahmodsalah.workers.dev/"],
+  ["Foda Salama", "🎓", "https://foda-salama.mahmodsalah.workers.dev/"],
+  ["Right Water", "💧", "https://right-water.mahmodsalah.workers.dev/"],
+  ["Login Sahl", "🔑", "https://login-sahl.mahmodsalah.workers.dev/"],
+];

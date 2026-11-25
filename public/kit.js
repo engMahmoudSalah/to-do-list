@@ -116,3 +116,14 @@ function claimForm(done) {
   const k = h("input", { type: "password", placeholder: "Admin key", autocomplete: "off" });
   return h("form", { class: "row", onsubmit: (e) => { e.preventDefault(); guard(async () => { await api("/api/admin/claim", { key: k.value }); toast("Admin access granted"); done(); }); } }, k, h("button", { class: "btn pri" }, "Claim"));
 }
+import { SITES } from "/sites.js";
+export function siteFooter() {
+  const here = location.hostname;
+  const hue = (i) => (i * 47) % 360;
+  return h("footer", { class: "sitefoot", "aria-label": "More projects" },
+    h("div", { class: "small muted" }, "More from Mahmoud Salah"),
+    h("div", { class: "sitegrid" }, SITES.map(([name, glyph, url], i) => {
+      const cur = new URL(url).hostname === here;
+      return h("a", { href: url, class: "siteico" + (cur ? " cur" : ""), title: name, "aria-label": name + (cur ? " (this site)" : ""), "aria-current": cur ? "page" : null, style: `--hu:${hue(i)}` }, h("span", { class: "g" }, glyph), h("span", { class: "n" }, name));
+    })));
+}
