@@ -14,7 +14,7 @@ export const SITES = [
   ["AI Summit", "📅", "https://event-page.mahmodsalah.workers.dev/", "Event platform: publish agendas and speakers, issue free QR tickets, check attendees in and approve events as admin."],
   ["Orbit Tasks", "✅", "https://to-do-list.mahmodsalah.workers.dev/", "Team task manager: workspaces, invites, kanban boards, recurring tasks, reminders and a calendar."],
   ["Aqar Real Estate", "🏢", "https://real-state.mahmodsalah.workers.dev/", "Arabic-first (RTL) real estate marketplace: buyer and agent accounts, filters, favorites, inquiry inbox and admin approval."],
-  ["Magic Convertor", "✨", "https://magic-convertor.mahmodsalah.workers.dev/", "Universal file conversion toolkit, fast and in the browser."],
+  ["Magic Convertor", "✨", "https://magic-convertor.mahmodsalah.workers.dev/", "Browser-based toolkit of 40+ PDF, image and document tools with OCR, forms, editing, accounts, plans and an admin dashboard."],
   ["Children Skills", "🧒", "https://children-skills.mahmodsalah.workers.dev/", "Playful skills-learning experience built for kids."],
   ["Foda Salama", "🎓", "https://foda-salama.mahmodsalah.workers.dev/", "School website for Foda Salama Primary School."],
   ["Right Water", "💧", "https://right-water.mahmodsalah.workers.dev/", "Water services company site with a clean, fresh look."],
