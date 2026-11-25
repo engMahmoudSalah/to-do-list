@@ -1,4 +1,7 @@
 import { install, reveal } from "/fx.js";
+import { setup as i18n } from "/i18n.js";
+import { D as AD, R as AR } from "/ar.js";
+i18n(AD, AR);
 import { theme, kanbanHero } from "/art.js";
 install(theme);
 import { $, h, api, siteFooter, byMahmoudView, toast, guard, modal, fmtDate, fmtTime, ago, initTheme, field, authForm, plansView, adminView } from "/kit.js";
@@ -120,7 +123,7 @@ function calView() {
       (byDay[k] || []).slice(0, 3).map((t) => h("div", { class: "ev" + (t.done ? " dn" : ""), tabindex: 0, role: "button", onclick: () => taskModal(t), onkeydown: (e) => e.key === "Enter" && taskModal(t) }, t.title)), (byDay[k] || []).length > 3 ? h("div", { class: "small muted" }, `+${byDay[k].length - 3} more`) : null));
   }
   const go = (n) => { calMonth = new Date(y, mo + n, 1); boardRedraw(); };
-  return h("div", { class: "stack" }, h("div", { class: "row spread" }, h("button", { class: "btn sm", onclick: () => go(-1) }, "← Prev"), h("h2", { style: "margin:0" }, calMonth.toLocaleDateString(undefined, { month: "long", year: "numeric" })), h("button", { class: "btn sm", onclick: () => go(1) }, "Next →")), grid);
+  return h("div", { class: "stack" }, h("div", { class: "row spread" }, h("button", { class: "btn sm", onclick: () => go(-1) }, "← Prev"), h("h2", { style: "margin:0" }, calMonth.toLocaleDateString(document.documentElement.lang === "ar" ? "ar-EG" : undefined, { month: "long", year: "numeric" })), h("button", { class: "btn sm", onclick: () => go(1) }, "Next →")), grid);
 }
 async function taskModal(t, colId) {
   const w = W.workspace.id, ro = W.workspace.role === "viewer";

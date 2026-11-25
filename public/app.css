@@ -24,3 +24,8 @@ body{background-image:radial-gradient(color-mix(in srgb,var(--border) 70%,transp
 @keyframes kshow{0%,66%{opacity:0}72%,90%{opacity:1}100%{opacity:0}}
 .tcard{transition:transform .2s ease,border-color .2s}.tcard:hover{transform:translateY(-3px);border-color:var(--accent)}
 @media (prefers-reduced-motion:reduce){.kmove,.kt2,.oe .gcard,.obc{animation:none}.obc{stroke-dashoffset:0}.kmove{transform:translate(240px,-80px)}.kt2{opacity:1}}
+/* RTL and language button */
+[dir=rtl] body{font-family:"Noto Sans Arabic","Segoe UI",system-ui,sans-serif}
+.langbtn{font-weight:700;min-width:44px}
+[dir=rtl] .nav{direction:rtl}[dir=rtl] th,[dir=rtl] td{text-align:start}
+[dir=rtl] input[type=email],[dir=rtl] input[type=password],[dir=rtl] input[type=url],[dir=rtl] input[type=datetime-local],[dir=rtl] input[type=date]{direction:ltr;text-align:right}

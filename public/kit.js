@@ -45,8 +45,8 @@ export function modal(title, content, opts = {}) {
   const f = m.querySelector("input,textarea,select"); if (f) f.focus();
   return { close, el: m };
 }
-export const fmtDate = (t) => t ? new Date(t).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) : "";
-export const fmtTime = (t) => t ? new Date(t).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }) : "";
+export const fmtDate = (t) => t ? new Date(t).toLocaleDateString(document.documentElement.lang === "ar" ? "ar-EG" : undefined, { year: "numeric", month: "short", day: "numeric" }) : "";
+export const fmtTime = (t) => t ? new Date(t).toLocaleString(document.documentElement.lang === "ar" ? "ar-EG" : undefined, { dateStyle: "medium", timeStyle: "short" }) : "";
 export function ago(t) {
   const s = Math.max(1, (Date.now() - t) / 1000);
   if (s < 90) return "just now"; if (s < 5400) return Math.round(s / 60) + " min ago";
