@@ -1,0 +1,14 @@
+.board{display:flex;gap:14px;overflow-x:auto;padding-bottom:14px;align-items:flex-start;scroll-snap-type:x proximity}
+.col{background:var(--surface2);border:1px solid var(--border);border-radius:14px;min-width:270px;width:270px;padding:10px;flex:none;scroll-snap-align:start}
+.col.over{outline:2px dashed var(--accent)}
+.col h3{display:flex;justify-content:space-between;margin:2px 4px 10px;font-size:.95rem}
+.tcard{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px;cursor:pointer;box-shadow:var(--shadow)}
+.tcard:hover{border-color:var(--accent)}.tcard.dragging{opacity:.4}.tcard.done .tt{text-decoration:line-through;color:var(--muted)}
+.tt{font-weight:600;word-break:break-word}.pr-urgent{border-inline-start:4px solid var(--danger)}.pr-high{border-inline-start:4px solid var(--warn)}
+.chk{width:20px;height:20px;min-height:0;flex:none;margin-top:2px;accent-color:var(--accent)}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.cal .dh{font-size:.78rem;font-weight:700;color:var(--muted);text-align:center;padding:4px}
+.cal .day{min-height:92px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:4px;overflow:hidden}.cal .day.out{opacity:.5}.cal .day.today{border-color:var(--accent);border-width:2px}
+.cal .ev{font-size:.74rem;background:var(--accent-soft);border-radius:5px;padding:1px 5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;color:var(--text)}.cal .ev.dn{text-decoration:line-through;color:var(--muted)}
+.landing .feat{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin:28px 0}
+.mv{display:flex;gap:4px;margin-top:6px}
+@media(max-width:640px){.col{min-width:84vw;width:84vw}.cal .day{min-height:60px}.cal .ev{font-size:.66rem}}
