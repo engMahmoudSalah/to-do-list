@@ -47,8 +47,14 @@ export class BaseHub extends DurableObject {
     super(ctx, env);
     this.sql = ctx.storage.sql;
     this.env = env;
-    this.sql.exec(CORE);
-    if (this.schemaSQL) for (const s of this.schemaSQL().split(";\n")) if (s.trim()) { try { this.sql.exec(s); } catch (e) { if (!/duplicate column/i.test(String(e))) throw e; } }
+    // Schema DDL reads rows on every cold start, so run it once per schema version and remember that in KV.
+    const all = CORE + (this.schemaSQL ? this.schemaSQL() : ""); let hv = 0; for (let i = 0; i < all.length; i++) hv = (hv * 31 + all.charCodeAt(i)) | 0;
+    const ver = "v" + hv;
+    if (ctx.storage.kv.get("schema") !== ver) {
+      this.sql.exec(CORE);
+      if (this.schemaSQL) for (const s of this.schemaSQL().split(";\n")) if (s.trim()) { try { this.sql.exec(s); } catch (e) { if (!/duplicate column/i.test(String(e))) throw e; } }
+      ctx.storage.kv.put("schema", ver);
+    }
   }
   q(sql, ...a) { return [...this.sql.exec(sql, ...a)]; }
   one(sql, ...a) { return this.q(sql, ...a)[0]; }
