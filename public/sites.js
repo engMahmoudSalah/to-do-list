@@ -11,7 +11,7 @@ export const SITES = [
   ["Stash", "🔖", "https://stools.mahmodsalah.workers.dev/", "Bookmark vault: collections, tags, instant search, public share pages, import and export."],
   ["Naturix", "🍳", "https://naturix.mahmodsalah.workers.dev/", "AI-powered recipe recommendation system with a dynamic interactive interface."],
   ["TaqwaShield AI", "🛡️", "https://taqwa-shield-ai.mahmodsalah.workers.dev/", "Smart browser extension that detects and blurs inappropriate content instantly, on-device."],
-  ["AI Summit", "📅", "https://event-page.mahmodsalah.workers.dev/", "Modern event landing experience with a brutalist aesthetic and scroll-driven animations."],
+  ["AI Summit", "📅", "https://event-page.mahmodsalah.workers.dev/", "Event platform: publish agendas and speakers, issue free QR tickets, check attendees in and approve events as admin."],
   ["Orbit Tasks", "✅", "https://to-do-list.mahmodsalah.workers.dev/", "Team task manager: workspaces, invites, kanban boards, recurring tasks, reminders and a calendar."],
   ["Aqar Real Estate", "🏢", "https://real-state.mahmodsalah.workers.dev/", "Arabic-first (RTL) real estate marketplace: buyer and agent accounts, filters, favorites, inquiry inbox and admin approval."],
   ["Magic Convertor", "✨", "https://magic-convertor.mahmodsalah.workers.dev/", "Universal file conversion toolkit, fast and in the browser."],

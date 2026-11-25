@@ -58,6 +58,10 @@ CREATE TABLE IF NOT EXISTS activity(id INTEGER PRIMARY KEY AUTOINCREMENT, ws TEX
     const u = this.need(c); const t = this.one("SELECT * FROM tasks WHERE id=?", id);
     if (!t) bad("Task not found.", 404); const r = this.role(t.ws, u); return { t, u, r };
   }
+  purgeUsers(ids) { const n = ids.map(() => "?").join(","); const W = `SELECT id FROM ws WHERE owner IN (${n})`;
+    this.run(`DELETE FROM comments WHERE uid IN (${n}) OR task IN (SELECT id FROM tasks WHERE ws IN (${W}))`, ...ids, ...ids);
+    for (const t of ["tasks", "boards", "members", "invites", "activity"]) this.run(`DELETE FROM ${t} WHERE ws IN (${W})`, ...ids);
+    this.run(`DELETE FROM cols WHERE board NOT IN (SELECT id FROM boards)`); this.run(`DELETE FROM members WHERE uid IN (${n})`, ...ids); this.run(`DELETE FROM notes WHERE uid IN (${n})`, ...ids); this.run(`DELETE FROM ws WHERE owner IN (${n})`, ...ids); }
   async app(c) {
     const { path, method, body } = c; let m;
     if (path === "/api/plans" && method === "GET") return { plans: [

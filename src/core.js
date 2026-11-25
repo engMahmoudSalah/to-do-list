@@ -158,9 +158,9 @@ export class BaseHub extends DurableObject {
       return { ok: true };
     }
     if (path === "/api/admin/claim" && method === "POST") {
-      const u = this.need(c); this.limit("claim:" + c.ip, 5, 3600e3);
+      const u = this.need(c);
       const hh = this.adminHash ? this.adminHash() : null;
-      if (!hh || (await sha256(String(body.key || ""))) !== hh) bad("Invalid admin key.", 403);
+      if (!hh || (await sha256(String(body.key || ""))) !== hh) { this.limit("claim:" + c.ip, 5, 3600e3); bad("Invalid admin key.", 403); }
       this.run("UPDATE users SET role='admin' WHERE id=?", u.id);
       this.audit(u.id, "admin_claim");
       return { ok: true };
@@ -178,6 +178,15 @@ export class BaseHub extends DurableObject {
         recent: this.q("SELECT id,email,name,role,plan,status,created,last_login FROM users ORDER BY created DESC LIMIT 100"),
         audit: this.q("SELECT a.ts,a.action,a.detail,u.email FROM audit a LEFT JOIN users u ON u.id=a.uid ORDER BY a.id DESC LIMIT 100"),
       };
+    }
+    if (path === "/api/admin/purge-demo" && method === "POST") {
+      this.needAdmin(c);
+      const ids = this.q("SELECT id FROM users WHERE email LIKE '%@example.com'").map((r) => r.id);
+      if (this.purgeUsers && ids.length) this.purgeUsers(ids);
+      const inl = (n) => ids.map(() => "?").join(",");
+      if (ids.length) { this.run(`DELETE FROM sessions WHERE uid IN (${inl()})`, ...ids); this.run(`DELETE FROM audit WHERE uid IN (${inl()})`, ...ids); this.run(`DELETE FROM users WHERE id IN (${inl()})`, ...ids); }
+      this.run("DELETE FROM rl"); this.audit(null, "purge_demo", String(ids.length));
+      return { removed: ids.length };
     }
     if (path === "/api/admin/user" && method === "POST") {
       const me = this.needAdmin(c);

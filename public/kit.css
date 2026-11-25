@@ -24,7 +24,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:start;padding:9px 10p
 .empty{text-align:center;padding:36px 12px;color:var(--muted)}
 .auth{max-width:420px;margin:7vh auto}.hero{text-align:center;padding:40px 0 10px}.hero h1{font-size:clamp(1.8rem,5vw,2.8rem)}
 .stat{font-size:1.8rem;font-weight:800}.seg{display:inline-flex;border:1px solid var(--border);border-radius:10px;overflow:hidden}.seg button{border:0;background:var(--surface);color:var(--muted);padding:7px 12px;font:inherit;font-weight:600;cursor:pointer}.seg button.on{background:var(--accent);color:var(--accent-t)}
-.err{color:var(--danger);font-weight:600}.sr{position:absolute;left:-9999px}
+.err{color:var(--danger);font-weight:600}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 .plan{border:2px solid var(--border)}.plan.cur{border-color:var(--accent)}
 @media(max-width:640px){main{padding:14px 12px 80px}.topbar .in{padding:8px 12px;gap:8px}.hide-sm{display:none}h1{font-size:1.35rem}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
