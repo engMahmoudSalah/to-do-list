@@ -1,4 +1,4 @@
-import { $, h, api, siteFooter, toast, guard, modal, fmtDate, fmtTime, ago, initTheme, field, authForm, plansView, adminView } from "/kit.js";
+import { $, h, api, siteFooter, byMahmoudView, toast, guard, modal, fmtDate, fmtTime, ago, initTheme, field, authForm, plansView, adminView } from "/kit.js";
 const toggleTheme = initTheme();
 const S = { user: null, unread: 0 };
 const app = $("#app");
@@ -183,6 +183,7 @@ async function join(token) {
   shell(h("div", { class: "card stack auth" }, h("h2", {}, `Join ${d.workspace}`), h("p", { class: "muted" }, `You were invited as ${d.role}.`), h("button", { class: "btn pri", onclick: () => guard(async () => { const r = await api(`/api/join/${token}`, {}); W = null; location.hash = `#/w/${r.id}`; }) }, "Accept invite")), "home");
 }
 async function route() {
+  if (location.pathname === "/by-mahmoud") { if (location.hash.length > 1) history.replaceState(null, "", "/" + location.hash); else return shell(byMahmoudView(), ""); }
   if (!S.user) {
     const j = location.hash.match(/^#\/join\//);
     if (j) { sessionStorage.setItem("after", location.hash); }
