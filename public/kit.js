@@ -134,9 +134,9 @@ export function siteFooter() {
     h("div", { class: "small muted" }, h("a", { href: "/by-mahmoud" }, t("By Mahmoud")), " · \u00a9 Mahmoud Salah")));
 }
 export function byMahmoudView() {
-  document.title = "By Mahmoud";
+  document.title = "By Mahmoud \u2014 " + SITES.length + " Live Sites & Systems";
   const here = location.hostname;
-  return h("div", { class: "stack" }, h("div", {}, h("h1", {}, t("By Mahmoud")), h("p", { class: "muted" }, t("Every project I have built, live and free to try."))),
+  return h("div", { class: "stack" }, h("div", {}, h("h1", {}, "By Mahmoud \u2014 " + SITES.length + " Live Sites & Systems"), h("p", { class: "muted" }, t("Every project I have built, live and free to try."))),
     h("div", { class: "grid" }, SITES.map(([name, glyph, url, desc]) => {
       const cur = new URL(url).hostname === here;
       return h("a", { class: "card stack bycard" + (cur ? " cur" : ""), href: url, "aria-current": cur ? "page" : null, style: "text-decoration:none;color:inherit;gap:8px" },

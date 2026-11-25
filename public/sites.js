@@ -22,4 +22,5 @@ export const SITES = [
   ["Lerne Deutsch", "🇩🇪", "https://lerne-deutsch.mahmodsalah.workers.dev/", "Arabic-first German course: personal learning path, A1 to B1 lessons with audio, exercises and spaced review."],
   ["Tabeebi", "🩺", "https://tabeebi.mahmodsalah.workers.dev/", "Doctor booking platform: search, live slots, reviews, video visits and doctor subscription plans."],
   ["CV", "📄", "https://cv.mahmodsalah.workers.dev/", "Resume page: skills, projects, education and a PDF download."],
+  ["Velocity", "⚡", "https://velocity.mahmodsalah.workers.dev/", "Project and task board with real-time sync, roles, comments and activity, on Cloudflare."],
 ];
