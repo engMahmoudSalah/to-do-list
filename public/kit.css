@@ -33,3 +33,10 @@ table{width:100%;border-collapse:collapse}th,td{text-align:start;padding:9px 10p
 .fico:hover{background:var(--accent-soft);border-color:var(--accent)}
 .bycard.cur{border-color:var(--accent);border-width:2px}.bycard:hover{border-color:var(--accent)}
 .fav{width:42px;height:42px;border-radius:10px;background:var(--surface2);display:grid;place-items:center;font-weight:800;flex:none;border:1px solid var(--border);color:var(--accent)}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}.reveal.in{opacity:1;transform:none}
+.fxc{display:block;width:100%;height:100%}.fxwrap{position:relative;overflow:hidden}.fxwrap>.fxbg{position:absolute;inset:0;opacity:.55;pointer-events:none}.fxwrap>.fxfg{position:relative}
+.fxart{width:min(300px,70vw);height:240px;margin:0 auto;pointer-events:none}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-10px) rotate(var(--r,0deg))}}
+.floaty{animation:floaty 5s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.floaty{animation:none}*{scroll-behavior:auto!important}}
+.fxwrap>.fxbg{z-index:0}.fxwrap>*:not(.fxbg){position:relative;z-index:1}

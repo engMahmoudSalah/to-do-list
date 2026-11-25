@@ -20,4 +20,5 @@ export const SITES = [
   ["Right Water", "💧", "https://right-water.mahmodsalah.workers.dev/", "Water services company site with a clean, fresh look."],
   ["Login Sahl", "🔑", "https://login-sahl.mahmodsalah.workers.dev/", "Simplified login and onboarding experience."],
   ["Lerne Deutsch", "🇩🇪", "https://lerne-deutsch.mahmodsalah.workers.dev/", "Arabic-first German course: personal learning path, A1 to B1 lessons with audio, exercises and spaced review."],
+  ["Tabeebi", "🩺", "https://tabeebi.mahmodsalah.workers.dev/", "Doctor booking platform: search, live slots, reviews, video visits and doctor subscription plans."],
 ];
