@@ -47,7 +47,7 @@ function newWs() {
 }
 
 let W = null; // current workspace data
-let view = "board", boardId = null, filter = { q: "", who: "", mine: false };
+let view = "board", boardId = null, filter = { q: "", who: "", mine: false, when: "" };
 async function workspace(id, sub) {
   if (!W || W.workspace.id !== id || sub === "reload") W = await api(`/api/w/${id}`);
   if (sub === "members") return membersView();
@@ -58,17 +58,23 @@ async function workspace(id, sub) {
   const bsel = h("select", { "aria-label": "Board", style: "width:auto", onchange: (e) => { boardId = e.target.value; workspace(id, view); } }, W.boards.map((b) => h("option", { value: b.id, selected: b.id === boardId }, b.name)));
   const q = h("input", { type: "search", placeholder: "Search tasks", "aria-label": "Search tasks", value: filter.q, style: "width:170px", oninput: (e) => { filter.q = e.target.value; draw(); } });
   const mine = h("label", { class: "row small", style: "margin:0;gap:4px" }, h("input", { type: "checkbox", checked: filter.mine, style: "width:auto;min-height:0", onchange: (e) => { filter.mine = e.target.checked; draw(); } }), "Mine");
+  const whenSel = h("select", { "aria-label": "Show", style: "width:auto", onchange: (e) => { filter.when = e.target.value; draw(); } }, [["", "All tasks"], ["open", "Open only"], ["overdue", "Overdue"], ["today", "Due today"], ["urgent", "High priority"]].map(([v, l]) => h("option", { value: v, selected: filter.when === v }, l)));
   const body = h("div", {});
   const draw = () => { body.replaceChildren(view === "board" ? boardView() : view === "list" ? listView() : calView()); };
   shell(h("div", { class: "stack" },
     h("div", { class: "row spread" }, h("div", {}, h("h1", { style: "margin:0" }, W.workspace.name), h("span", { class: "badge acc" }, W.workspace.role)), h("div", { class: "row" }, tab("members", "Team", `#/w/${id}/members`))),
-    h("div", { class: "row" }, h("div", { class: "row" }, tab("board", "Board", `#/w/${id}`), tab("list", "List", `#/w/${id}/list`), tab("calendar", "Calendar", `#/w/${id}/calendar`)), bsel, q, mine, h("div", { class: "grow" }),
+    h("div", { class: "row" }, h("div", { class: "row" }, tab("board", "Board", `#/w/${id}`), tab("list", "List", `#/w/${id}/list`), tab("calendar", "Calendar", `#/w/${id}/calendar`)), bsel, whenSel, q, mine, h("div", { class: "grow" }),
       canEdit ? h("button", { class: "btn pri", onclick: () => taskModal(null) }, "+ Task") : null), body), "home");
   draw();
 }
 function visible(t) {
   if (t.board !== boardId) return false;
   if (filter.mine && t.assignee !== S.user.id) return false;
+  if (filter.when) { const day = new Date(); day.setHours(0, 0, 0, 0); const d0 = day.getTime();
+    if (filter.when === "overdue" && !(!t.done && t.due && t.due + 864e5 < Date.now())) return false;
+    if (filter.when === "today" && !(t.due && t.due >= d0 - 432e5 && t.due < d0 + 864e5 + 432e5 && !t.done)) return false;
+    if (filter.when === "urgent" && !(!t.done && (t.prio === "high" || t.prio === "urgent"))) return false;
+    if (filter.when === "open" && t.done) return false; }
   if (filter.q && !(t.title + " " + t.descr + " " + t.labels.join(" ")).toLowerCase().includes(filter.q.toLowerCase())) return false;
   return true;
 }
