@@ -62,6 +62,9 @@ CREATE TABLE IF NOT EXISTS activity(id INTEGER PRIMARY KEY AUTOINCREMENT, ws TEX
     this.run(`DELETE FROM comments WHERE uid IN (${n}) OR task IN (SELECT id FROM tasks WHERE ws IN (${W}))`, ...ids, ...ids);
     for (const t of ["tasks", "boards", "members", "invites", "activity"]) this.run(`DELETE FROM ${t} WHERE ws IN (${W})`, ...ids);
     this.run(`DELETE FROM cols WHERE board NOT IN (SELECT id FROM boards)`); this.run(`DELETE FROM members WHERE uid IN (${n})`, ...ids); this.run(`DELETE FROM notes WHERE uid IN (${n})`, ...ids); this.run(`DELETE FROM ws WHERE owner IN (${n})`, ...ids); }
+  exportData(u) {
+    return { memberships: this.q("SELECT ws,role,joined FROM members WHERE uid=?", u.id), notifications: this.q("SELECT text,ts FROM notes WHERE uid=? ORDER BY ts DESC LIMIT 500", u.id), comments: this.q("SELECT task,body,ts FROM comments WHERE uid=? ORDER BY ts DESC LIMIT 1000", u.id), tasks_assigned: this.q("SELECT t.id,t.title,t.descr,t.prio FROM tasks t JOIN members m ON m.ws=t.ws WHERE m.uid=? AND t.assignee=? LIMIT 2000", u.id, u.id) };
+  }
   async app(c) {
     const { path, method, body } = c; let m;
     if (path === "/api/plans" && method === "GET") return { plans: [

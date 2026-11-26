@@ -166,6 +166,10 @@ export function sessionsCard() {
       d.sessions.length > 1 ? h("button", { class: "btn sm", type: "button", onclick: () => guard(async () => { await api("/api/auth/sessions/revoke-others", {}); toast(t("Signed out of other devices")); await load(); }) }, t("Sign out other devices")) : null].filter(Boolean));
   };
   load().catch((e) => { list.textContent = e.message; });
+  card.append(h("button", { class: "btn sm", type: "button", onclick: () => guard(async () => {
+    const d = await api("/api/auth/export"); const x = document.createElement("a");
+    x.href = URL.createObjectURL(new Blob([JSON.stringify(d, null, 2)], { type: "application/json" })); x.download = "my-data.json"; x.click(); setTimeout(() => URL.revokeObjectURL(x.href), 2000); toast(t("Data downloaded"));
+  }) }, t("Download my data")));
   return card;
 }
 

@@ -168,6 +168,12 @@ export class BaseHub extends DurableObject {
       const rows = this.q("SELECT h,created,exp,ua FROM sessions WHERE uid=? AND exp>? ORDER BY created DESC LIMIT 20", u.id, now());
       return { sessions: rows.map((r) => ({ created: r.created, ua: r.ua || "", current: r.h === cur })) };
     }
+    if (path === "/api/auth/export" && method === "GET") {
+      const u = this.need(c); this.limit("exp:" + u.id, 5, 3600e3);
+      const data = this.exportData ? this.exportData(u) : {};
+      this.audit(u.id, "data_export");
+      return { exported: new Date().toISOString(), account: this.publicUser(u), audit: this.q("SELECT ts,action FROM audit WHERE uid=? ORDER BY ts DESC LIMIT 200", u.id), data };
+    }
     if (path === "/api/auth/sessions/revoke-others" && method === "POST") {
       const u = this.need(c); this.limit("rv:" + u.id, 10, 600e3);
       this.run("DELETE FROM sessions WHERE uid=? AND h<>?", u.id, await sha256(c.sid || ""));
