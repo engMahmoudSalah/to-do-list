@@ -58,6 +58,14 @@ CREATE TABLE IF NOT EXISTS activity(id INTEGER PRIMARY KEY AUTOINCREMENT, ws TEX
     const u = this.need(c); const t = this.one("SELECT * FROM tasks WHERE id=?", id);
     if (!t) bad("Task not found.", 404); const r = this.role(t.ws, u); return { t, u, r };
   }
+  beforeDelete(u) {
+    for (const w of this.q("SELECT id FROM ws WHERE owner=?", u.id)) {
+      const next = this.one("SELECT uid FROM members WHERE ws=? AND uid<>? ORDER BY CASE role WHEN 'admin' THEN 0 WHEN 'member' THEN 1 ELSE 2 END, joined LIMIT 1", w.id, u.id);
+      if (!next) continue;
+      this.run("UPDATE ws SET owner=? WHERE id=?", next.uid, w.id); this.run("UPDATE members SET role='owner' WHERE ws=? AND uid=?", w.id, next.uid);
+      this.run("INSERT INTO activity(ws,uid,text,ts) VALUES(?,?,?,?)", w.id, next.uid, "became the owner because the previous owner deleted their account", now());
+    }
+  }
   purgeUsers(ids) { const n = ids.map(() => "?").join(","); const W = `SELECT id FROM ws WHERE owner IN (${n})`;
     this.run(`DELETE FROM comments WHERE uid IN (${n}) OR task IN (SELECT id FROM tasks WHERE ws IN (${W}))`, ...ids, ...ids);
     for (const t of ["tasks", "boards", "members", "invites", "activity"]) this.run(`DELETE FROM ${t} WHERE ws IN (${W})`, ...ids);

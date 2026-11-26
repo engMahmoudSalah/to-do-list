@@ -172,6 +172,7 @@ export class BaseHub extends DurableObject {
       const u = this.need(c); this.limit("del:" + u.id, 5, 3600e3);
       if (!(await verifyPw(String(body.password || ""), u.pw))) { this.audit(u.id, "delete_fail"); bad("Wrong password.", 403); }
       if (String(body.confirm || "").trim().toLowerCase() !== u.email.toLowerCase()) bad("Type your email to confirm.");
+      if (this.beforeDelete) this.beforeDelete(u);
       if (this.purgeUsers) this.purgeUsers([u.id]);
       this.run("DELETE FROM sessions WHERE uid=?", u.id); this.run("UPDATE audit SET uid=NULL WHERE uid=?", u.id); this.run("DELETE FROM users WHERE id=?", u.id);
       this.audit(null, "account_deleted", (await sha256(u.email)).slice(0, 10));
