@@ -31,3 +31,11 @@ body{background-image:radial-gradient(color-mix(in srgb,var(--border) 70%,transp
 [dir=rtl] input[type=email],[dir=rtl] input[type=password],[dir=rtl] input[type=url],[dir=rtl] input[type=datetime-local],[dir=rtl] input[type=date]{direction:ltr;text-align:right}
 [dir=rtl] button[aria-label="نقل لليمين"],[dir=rtl] button[aria-label="نقل لليسار"]{transform:scaleX(-1)}
 .liststats{gap:14px}.pbar{height:8px;border-radius:99px;background:var(--surface2);border:1px solid var(--border);margin-top:6px;overflow:hidden}.pbar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}@media (prefers-reduced-motion:reduce){.pbar i{transition:none}}
+@media(max-width:640px){
+  .stk thead{display:none}
+  .stk tr{display:flex;flex-wrap:wrap;gap:var(--sp-1) var(--sp-3);align-items:flex-start;padding:var(--sp-3) 0;border-bottom:1px solid var(--border)}
+  .stk tr:last-child{border-bottom:0}.stk td{border:0;padding:0}
+  .stk td:nth-child(1){flex:0 0 28px}.stk td:nth-child(2){flex:1 1 calc(100% - 44px)}
+  .stk td:nth-child(n+3){font-size:var(--fs-sm);color:var(--muted)}.stk td:nth-child(3){margin-inline-start:40px}
+  .cal{gap:2px}.cal .day{min-height:52px;padding:3px}.cal .ev{font-size:0;width:6px;height:6px;padding:0;border-radius:50%;display:inline-block;margin:3px 2px 0 0;background:var(--accent)}
+}
