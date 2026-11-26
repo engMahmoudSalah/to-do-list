@@ -108,7 +108,7 @@ export function adminView(extraTitle, renderApp) {
     if (renderApp) root.append(renderApp(d.app));
     const rows = d.recent.map((u) => {
       const sel = (key, opts) => h("select", { "aria-label": key, style: "width:auto;min-height:32px;padding:3px 8px", onchange: (e) => guard(async () => { await api("/api/admin/user", { id: u.id, [key]: e.target.value }); toast(t("Updated")); load(); }) }, opts.map((o) => h("option", { value: o, selected: u[key] === o }, o)));
-      return h("tr", {}, h("td", {}, h("b", {}, u.name), h("div", { class: "small muted" }, u.email)), h("td", {}, sel("role", ["user", "admin"])), h("td", {}, sel("plan", ["free", "pro"])), h("td", {}, sel("status", ["active", "suspended"])), h("td", { class: "small muted" }, fmtDate(u.created)));
+      return h("tr", {}, h("td", {}, h("b", {}, u.name), u.status !== "active" ? h("span", { class: "badge", style: "margin-inline-start:8px;background:#b3261e;color:#fff" }, t("Suspended")) : null, h("div", { class: "small muted" }, u.email)), h("td", {}, sel("role", ["user", "admin"])), h("td", {}, sel("plan", ["free", "pro"])), h("td", {}, sel("status", ["active", "suspended"])), h("td", { class: "small muted" }, fmtDate(u.created)));
     });
     root.append(h("div", { class: "card stack" }, h("h2", {}, t("Users")), h("div", { class: "tablewrap" }, h("table", {}, h("thead", {}, h("tr", {}, [t("User"), t("Role"), t("Plan"), t("Status"), t("Joined")].map((x) => h("th", {}, x)))), h("tbody", {}, rows)))));
     root.append(auditCard(d.audit));
