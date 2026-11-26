@@ -4,7 +4,7 @@ import { D as AD, R as AR } from "/ar.js";
 i18n(AD, AR);
 import { theme, kanbanHero } from "/art.js";
 install(theme);
-import { $, h, api, siteFooter, byMahmoudView, toast, guard, modal, fmtDate, fmtTime, ago, initTheme, field, authForm, plansView, adminView, emptyIcon } from "/kit.js";
+import { $, h, api, siteFooter, byMahmoudView, toast, guard, modal, fmtDate, fmtTime, ago, initTheme, field, authForm, plansView, adminView, emptyIcon, sessionsCard } from "/kit.js";
 const toggleTheme = initTheme();
 const S = { user: null, unread: 0 };
 const app = $("#app");
@@ -191,7 +191,7 @@ function account() {
   shell(h("div", { class: "stack", style: "max-width:520px" }, h("h1", {}, "Account"), h("div", { class: "muted" }, S.user.email + " · plan " + S.user.plan),
     h("form", { class: "card stack", onsubmit: (e) => { e.preventDefault(); guard(async () => { const r = await api("/api/auth/profile", { name: name.value }); S.user = r.user; toast("Saved"); }); } }, h("h2", {}, "Profile"), field("Name", name), h("button", { class: "btn pri" }, "Save")),
     h("form", { class: "card stack", onsubmit: (e) => { e.preventDefault(); guard(async () => { await api("/api/auth/password", { current: cur.value, password: np.value }); cur.value = np.value = ""; toast("Password changed"); }); } }, h("h2", {}, "Password"), field("Current password", cur), field("New password", np, "At least 8 characters"), h("button", { class: "btn" }, "Change password")),
-    h("button", { class: "btn", onclick: () => guard(async () => { await api("/api/auth/logout", {}); S.user = null; W = null; route(); }) }, "Log out")), "account");
+    sessionsCard(), h("button", { class: "btn", onclick: () => guard(async () => { await api("/api/auth/logout", {}); S.user = null; W = null; route(); }) }, "Log out")), "account");
 }
 async function join(token) {
   const d = await api(`/api/join/${token}`).catch((e) => ({ error: e.message }));

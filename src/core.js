@@ -163,6 +163,16 @@ export class BaseHub extends DurableObject {
       this.audit(u.id, "password_change");
       return { ok: true };
     }
+    if (path === "/api/auth/sessions" && method === "GET") {
+      const u = this.need(c), cur = await sha256(c.sid || "");
+      const rows = this.q("SELECT h,created,exp,ua FROM sessions WHERE uid=? AND exp>? ORDER BY created DESC LIMIT 20", u.id, now());
+      return { sessions: rows.map((r) => ({ created: r.created, ua: r.ua || "", current: r.h === cur })) };
+    }
+    if (path === "/api/auth/sessions/revoke-others" && method === "POST") {
+      const u = this.need(c); this.limit("rv:" + u.id, 10, 600e3);
+      this.run("DELETE FROM sessions WHERE uid=? AND h<>?", u.id, await sha256(c.sid || ""));
+      this.audit(u.id, "sessions_revoked"); return { ok: true };
+    }
     if (path === "/api/admin/claim" && method === "POST") {
       const u = this.need(c);
       const hh = this.adminHash ? this.adminHash() : null;

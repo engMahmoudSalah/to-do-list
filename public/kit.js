@@ -157,3 +157,15 @@ export function emptyIcon(name) {
   s.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${LUC[name] || LUC.inbox}</svg>`;
   return s;
 }
+
+export function sessionsCard() {
+  const list = h("div", { class: "stack small" }), card = h("div", { class: "card stack" }, h("h3", {}, t("Signed-in devices")), list);
+  const load = async () => {
+    const d = await api("/api/auth/sessions");
+    const short = (ua) => /iPhone|iPad/.test(ua) ? "iPhone / iPad" : /Android/.test(ua) ? "Android" : /Windows/.test(ua) ? "Windows" : /Mac/.test(ua) ? "Mac" : /Linux/.test(ua) ? "Linux" : t("Unknown device");
+    list.replaceChildren(...[...d.sessions.map((s) => h("div", { class: "row spread" }, h("span", {}, short(s.ua) + (s.current ? " (" + t("this device") + ")" : "")), h("span", { class: "muted" }, fmtDate(s.created)))),
+      d.sessions.length > 1 ? h("button", { class: "btn sm", type: "button", onclick: () => guard(async () => { await api("/api/auth/sessions/revoke-others", {}); toast(t("Signed out of other devices")); await load(); }) }, t("Sign out other devices")) : null].filter(Boolean));
+  };
+  load().catch((e) => { list.textContent = e.message; });
+  return card;
+}
