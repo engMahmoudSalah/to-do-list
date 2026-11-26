@@ -107,10 +107,13 @@ const boardRedraw = () => workspace(W.workspace.id, view);
 function listView() {
   const rows = W.tasks.filter(visible).sort((a, b) => a.done - b.done || (a.due || 9e15) - (b.due || 9e15));
   if (!rows.length) return h("div", { class: "card empty" }, "No tasks match.");
-  return h("div", { class: "card tablewrap" }, h("table", {}, h("thead", {}, h("tr", {}, ["", "Task", "Status", "Due", "Assignee"].map((x) => h("th", {}, x)))),
+  const all = W.tasks, doneN = all.filter((t) => t.done).length, late = all.filter((t) => !t.done && t.due && t.due + 864e5 < Date.now()).length, pct = all.length ? Math.round((doneN / all.length) * 100) : 0;
+  const csv = () => { const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`; const head = ["Task", "Status", "Priority", "Due", "Assignee", "Done"]; const lines = [head, ...all.map((t) => [t.title, (W.cols.find((c) => c.id === t.col) || {}).name, t.prio, t.due ? new Date(t.due).toISOString().slice(0, 10) : "", who(t.assignee) || "", t.done ? "yes" : "no"])].map((r) => r.map(esc).join(",")); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["\ufeff" + lines.join("\r\n")], { type: "text/csv" })); a.download = (W.workspace.name || "tasks").replace(/[^\w\u0600-\u06ff-]+/g, "-") + ".csv"; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); toast("CSV downloaded"); };
+  const stats = h("div", { class: "card row spread liststats" }, h("div", { class: "grow" }, h("div", { class: "small muted" }, `${doneN} of ${all.length} done` + (late ? ` · ${late} overdue` : "")), h("div", { class: "pbar", role: "progressbar", "aria-valuenow": pct, "aria-valuemin": 0, "aria-valuemax": 100, "aria-label": "Progress" }, h("i", { style: `width:${pct}%` }))), h("button", { class: "btn sm", onclick: csv }, "Export CSV"));
+  return h("div", { class: "stack" }, stats, h("div", { class: "card tablewrap" }, h("table", {}, h("thead", {}, h("tr", {}, ["", "Task", "Status", "Due", "Assignee"].map((x) => h("th", {}, x)))),
     h("tbody", {}, rows.map((t) => h("tr", { style: "cursor:pointer", onclick: (e) => { if (!e.target.closest("input")) taskModal(t); } },
       h("td", {}, h("input", { type: "checkbox", class: "chk", checked: !!t.done, "aria-label": "Mark done", disabled: W.workspace.role === "viewer", onchange: (e) => guard(async () => { await patch(t, { done: e.target.checked }); boardRedraw(); }) })),
-      h("td", {}, h("div", { class: "tt" }, t.title), chips({ ...t, assignee: null, due: null })), h("td", {}, (W.cols.find((c) => c.id === t.col) || {}).name), h("td", {}, t.due ? fmtDate(t.due) : "-"), h("td", {}, who(t.assignee) || "-"))))));
+      h("td", {}, h("div", { class: "tt" }, t.title), chips({ ...t, assignee: null, due: null })), h("td", {}, (W.cols.find((c) => c.id === t.col) || {}).name), h("td", {}, t.due ? fmtDate(t.due) : "-"), h("td", {}, who(t.assignee) || "-")))))));
 }
 let calMonth = new Date(); calMonth.setDate(1);
 function calView() {

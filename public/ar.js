@@ -1,5 +1,5 @@
 import { C, CR } from "/ar-common.js";
-export const D = { ...C, "New here?": "جديد هنا؟", "+ Task": "+ مهمة", "design, urgent": "تصميم، عاجل", "At least 8 characters": "8 أحرف على الأقل", "created the workspace": "أنشأ مساحة العمل", "joined the workspace": "انضم إلى مساحة العمل", "removed a member": "أزال عضواً",
+export const D = { ...C, "New here?": "جديد هنا؟", "Export CSV": "تصدير CSV", "CSV downloaded": "تم تنزيل ملف CSV", "Progress": "التقدم", "+ Task": "+ مهمة", "design, urgent": "تصميم، عاجل", "At least 8 characters": "8 أحرف على الأقل", "created the workspace": "أنشأ مساحة العمل", "joined the workspace": "انضم إلى مساحة العمل", "removed a member": "أزال عضواً",
   "Orbit": "مدار", "Workspaces": "مساحات العمل", "My tasks": "مهامي", "Inbox": "الوارد", "Low": "منخفضة", "Normal": "عادية", "High": "عالية", "Urgent": "عاجلة",
   "Does not repeat": "لا يتكرر", "Daily": "يومياً", "Weekdays": "أيام الأسبوع", "Weekly": "أسبوعياً", "Monthly": "شهرياً",
   "Tasks your whole team can keep up with": "مهام يستطيع فريقك كله مواكبتها", "Workspaces, invites, kanban boards, repeating tasks, reminders and a calendar. Free for small teams.": "مساحات عمل ودعوات ولوحات كانبان ومهام متكررة وتذكيرات وتقويم. مجاني للفرق الصغيرة.",
@@ -28,6 +28,7 @@ export const D = { ...C, "New here?": "جديد هنا؟", "+ Task": "+ مهمة
   "You have view-only access in this workspace.": "لديك صلاحية المشاهدة فقط في مساحة العمل هذه.",
 };
 export const R = [...CR,
+  [/^(\d+) of (\d+) done( · (\d+) overdue)?$/, (m) => `${m[1]} من ${m[2]} منجزة` + (m[4] ? ` · ${m[4]} متأخرة` : "")],
   [/^(.*) team$/, (m) => `فريق: ${m[1]}`], [/^added "(.*)"$/, (m) => `أضاف "${m[1]}"`], [/^deleted "(.*)"$/, (m) => `حذف "${m[1]}"`], [/^completed "(.*)" \(repeats, next (.*)\)$/, (m) => `أنجز "${m[1]}" (متكررة، التالية ${m[2]})`], [/^completed "(.*)"$/, (m) => `أنجز "${m[1]}"`], [/^reopened "(.*)"$/, (m) => `أعاد فتح "${m[1]}"`],
   [/^Hi (.*)$/, (m) => `أهلاً ${m[1]}`], [/^Inbox \((\d+)\)$/, (m) => `الوارد (${m[1]})`], [/^(\d+) open · (\d+) total · (\d+) members?$/, (m) => `${m[1]} مفتوحة · ${m[2]} إجمالاً · ${m[3]} أعضاء`],
   [/^Plan: (.*)\. Up to (\d+) workspaces\.$/, (m, f) => `الخطة: ${f(m[1])}. حتى ${m[2]} مساحات عمل.`], [/^Overdue (.*)$/, (m) => `متأخرة ${m[1]}`], [/^\+(\d+) more$/, (m) => `+${m[1]} أخرى`],

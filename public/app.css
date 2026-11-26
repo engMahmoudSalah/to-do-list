@@ -30,3 +30,4 @@ body{background-image:radial-gradient(color-mix(in srgb,var(--border) 70%,transp
 [dir=rtl] .nav{direction:rtl}[dir=rtl] th,[dir=rtl] td{text-align:start}
 [dir=rtl] input[type=email],[dir=rtl] input[type=password],[dir=rtl] input[type=url],[dir=rtl] input[type=datetime-local],[dir=rtl] input[type=date]{direction:ltr;text-align:right}
 [dir=rtl] button[aria-label="نقل لليمين"],[dir=rtl] button[aria-label="نقل لليسار"]{transform:scaleX(-1)}
+.liststats{gap:14px}.pbar{height:8px;border-radius:99px;background:var(--surface2);border:1px solid var(--border);margin-top:6px;overflow:hidden}.pbar i{display:block;height:100%;background:var(--accent);border-radius:99px;transition:width .4s}@media (prefers-reduced-motion:reduce){.pbar i{transition:none}}
