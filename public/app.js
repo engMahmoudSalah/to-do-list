@@ -4,7 +4,7 @@ import { D as AD, R as AR } from "/ar.js";
 i18n(AD, AR);
 import { theme, kanbanHero } from "/art.js";
 install(theme);
-import { $, h, api, siteFooter, byMahmoudView, toast, guard, modal, fmtDate, fmtTime, ago, initTheme, field, authForm, plansView, adminView } from "/kit.js";
+import { $, h, api, siteFooter, byMahmoudView, toast, guard, modal, fmtDate, fmtTime, ago, initTheme, field, authForm, plansView, adminView, emptyIcon } from "/kit.js";
 const toggleTheme = initTheme();
 const S = { user: null, unread: 0 };
 const app = $("#app");
@@ -112,7 +112,7 @@ function boardView() {
 const boardRedraw = () => workspace(W.workspace.id, view);
 function listView() {
   const rows = W.tasks.filter(visible).sort((a, b) => a.done - b.done || (a.due || 9e15) - (b.due || 9e15));
-  if (!rows.length) return h("div", { class: "card empty" }, "No tasks match.");
+  if (!rows.length) return h("div", { class: "card empty" }, h("p", {}, "No tasks match."));
   const all = W.tasks, doneN = all.filter((t) => t.done).length, late = all.filter((t) => !t.done && t.due && t.due + 864e5 < Date.now()).length, pct = all.length ? Math.round((doneN / all.length) * 100) : 0;
   const csv = () => { const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`; const head = ["Task", "Status", "Priority", "Due", "Assignee", "Done"]; const lines = [head, ...all.map((t) => [t.title, (W.cols.find((c) => c.id === t.col) || {}).name, t.prio, t.due ? new Date(t.due).toISOString().slice(0, 10) : "", who(t.assignee) || "", t.done ? "yes" : "no"])].map((r) => r.map(esc).join(",")); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["\ufeff" + lines.join("\r\n")], { type: "text/csv" })); a.download = (W.workspace.name || "tasks").replace(/[^\w\u0600-\u06ff-]+/g, "-") + ".csv"; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); toast("CSV downloaded"); };
   const stats = h("div", { class: "card row spread liststats" }, h("div", { class: "grow" }, h("div", { class: "small muted" }, `${doneN} of ${all.length} done` + (late ? ` · ${late} overdue` : "")), h("div", { class: "pbar", role: "progressbar", "aria-valuenow": pct, "aria-valuemin": 0, "aria-valuemax": 100, "aria-label": "Progress" }, h("i", { style: `width:${pct}%` }))), h("button", { class: "btn sm", onclick: csv }, "Export CSV"));
