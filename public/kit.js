@@ -104,7 +104,7 @@ export function adminView(extraTitle, renderApp) {
     }
     root.innerHTML = "";
     const st = (n, l) => h("div", { class: "card" }, h("div", { class: "stat" }, n), h("div", { class: "muted small" }, l));
-    root.append(h("h1", {}, t("Admin dashboard")), h("div", { class: "grid" }, st(d.users, t("Users")), st(d.new7, t("New (7 days)")), st(d.active7, t("Active (7 days)")), st(d.pro, t("Pro (draft)")), st(d.suspended, t("Suspended"))));
+    root.append(h("h1", {}, t("Admin dashboard")), h("div", { class: "grid stats" }, st(d.users, t("Users")), st(d.new7, t("New (7 days)")), st(d.active7, t("Active (7 days)")), st(d.pro, t("Pro (draft)")), st(d.suspended, t("Suspended"))));
     if (renderApp) root.append(renderApp(d.app));
     const rows = d.recent.map((u) => {
       const sel = (key, opts) => h("select", { "aria-label": key, style: "width:auto;min-height:32px;padding:3px 8px", onchange: (e) => guard(async () => { await api("/api/admin/user", { id: u.id, [key]: e.target.value }); toast(t("Updated")); load(); }) }, opts.map((o) => h("option", { value: o, selected: u[key] === o }, o)));
