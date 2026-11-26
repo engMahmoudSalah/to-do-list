@@ -111,8 +111,7 @@ export function adminView(extraTitle, renderApp) {
       return h("tr", {}, h("td", {}, h("b", {}, u.name), h("div", { class: "small muted" }, u.email)), h("td", {}, sel("role", ["user", "admin"])), h("td", {}, sel("plan", ["free", "pro"])), h("td", {}, sel("status", ["active", "suspended"])), h("td", { class: "small muted" }, fmtDate(u.created)));
     });
     root.append(h("div", { class: "card stack" }, h("h2", {}, t("Users")), h("div", { class: "tablewrap" }, h("table", {}, h("thead", {}, h("tr", {}, [t("User"), t("Role"), t("Plan"), t("Status"), t("Joined")].map((x) => h("th", {}, x)))), h("tbody", {}, rows)))));
-    root.append(h("div", { class: "card stack" }, h("h2", {}, t("Audit log")), h("div", { class: "tablewrap" }, h("table", {}, h("thead", {}, h("tr", {}, [t("When"), t("Who"), t("Action"), t("Detail")].map((x) => h("th", {}, x)))),
-      h("tbody", {}, d.audit.map((a) => h("tr", {}, h("td", { class: "small muted" }, fmtTime(a.ts)), h("td", { class: "small" }, a.email || "-"), h("td", {}, h("span", { class: "badge" }, a.action)), h("td", { class: "small muted" }, a.detail || ""))))))));
+    root.append(auditCard(d.audit));
   };
   load(); return root;
 }
@@ -168,4 +167,27 @@ export function sessionsCard() {
   };
   load().catch((e) => { list.textContent = e.message; });
   return card;
+}
+
+function auditCard(rows) {
+  const q = h("input", { type: "search", placeholder: t("Search the log"), "aria-label": t("Search the log") });
+  const acts = [...new Set(rows.map((a) => a.action))].sort();
+  const sel = h("select", { "aria-label": t("Action") }, h("option", { value: "" }, t("All actions")), acts.map((a) => h("option", { value: a }, a)));
+  const body = h("tbody", {}), count = h("span", { class: "small muted" });
+  const view = () => {
+    const needle = q.value.trim().toLowerCase();
+    const list = rows.filter((a) => (!sel.value || a.action === sel.value) && (!needle || [a.email, a.action, a.detail].join(" ").toLowerCase().includes(needle)));
+    body.replaceChildren(...list.map((a) => h("tr", {}, h("td", { class: "small muted" }, fmtTime(a.ts)), h("td", { class: "small" }, a.email || "-"), h("td", {}, h("span", { class: "badge" }, a.action)), h("td", { class: "small muted" }, a.detail || ""))));
+    count.textContent = list.length + " / " + rows.length;
+    return list;
+  };
+  q.addEventListener("input", view); sel.addEventListener("change", view);
+  const csv = () => {
+    const list = view(), esc = (v) => { v = String(v ?? ""); if (/^[=+\-@\t\r]/.test(v)) v = "'" + v; return '"' + v.replace(/"/g, '""') + '"'; };
+    const out = ["when,who,action,detail", ...list.map((a) => [new Date(a.ts).toISOString(), a.email, a.action, a.detail].map(esc).join(","))].join("\n");
+    const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([out], { type: "text/csv" })); a.download = "audit-log.csv"; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  };
+  const card = h("div", { class: "card stack" }, h("h2", {}, t("Audit log")), h("div", { class: "row" }, q, sel, count, h("button", { class: "btn sm", type: "button", onclick: csv }, t("Export CSV"))),
+    h("div", { class: "tablewrap" }, h("table", {}, h("thead", {}, h("tr", {}, [t("When"), t("Who"), t("Action"), t("Detail")].map((x) => h("th", {}, x)))), body)));
+  view(); return card;
 }
