@@ -25,7 +25,7 @@ function shell(content, active) {
 function landing() {
   const box = h("div", { class: "landing" });
   app.replaceChildren(h("header", { class: "topbar" }, h("div", { class: "in" }, h("a", { class: "brand", href: "#/" }, h("span", { class: "lg" }, "◎"), "Orbit"), h("div", { class: "grow" }), h("button", { class: "btn sm", "aria-label": "Toggle dark mode", onclick: toggleTheme }, "◐"))),
-    h("main", {}, h("div", { class: "hero" }, h("div", { html: kanbanHero() }), h("h1", {}, "Tasks your whole team can keep up with"), h("p", { class: "muted", style: "max-width:560px;margin:0 auto 20px" }, "Workspaces, invites, kanban boards, repeating tasks, reminders and a calendar. Free for small teams.")),
+    h("main", {}, h("div", { class: "hero" }, h("div", { class: "d3", html: kanbanHero() }), h("h1", {}, "Tasks your whole team can keep up with"), h("p", { class: "muted", style: "max-width:560px;margin:0 auto 20px" }, "Workspaces, invites, kanban boards, repeating tasks, reminders and a calendar. Free for small teams.")),
       h("div", { class: "row", style: "justify-content:center;align-items:flex-start;gap:26px" },
         authForm((u) => { S.user = u; route(); }, { title: "Start with Orbit", sub: "Log in or create a free account." })),
       h("div", { class: "feat" }, [["Boards", "Drag tasks across columns. On a phone, use the move buttons."], ["Repeat and remind", "Daily, weekday, weekly or monthly tasks that roll forward when done."], ["Invite your team", "Share a link. Pick owner, admin, member or viewer."], ["Calendar", "See due dates by month and open a task with one tap."]].map(([a, b]) => h("div", { class: "card reveal tcard" }, h("h3", {}, a), h("p", { class: "muted" }, b))))), siteFooter());
@@ -37,7 +37,7 @@ async function home() {
   const d = await api("/api/workspaces"); await refreshUnread();
   const list = d.workspaces.length ? h("div", { class: "grid" }, d.workspaces.map((w) => h("a", { class: "card stack", href: `#/w/${w.id}`, style: "text-decoration:none;color:inherit" },
     h("div", { class: "row spread" }, h("h3", { style: "margin:0" }, w.name), h("span", { class: "badge" }, w.role)), h("div", { class: "muted small" }, `${w.open} open · ${w.tasks} total · ${w.members} member${w.members === 1 ? "" : "s"}`))))
-    : h("div", { class: "card empty" }, h("h3", {}, "No workspaces yet"), h("p", {}, "A workspace is a space for one team or project. Create your first one."));
+    : h("div", { class: "card empty d3e" }, h("h3", {}, "No workspaces yet"), h("p", {}, "A workspace is a space for one team or project. Create your first one."));
   shell(h("div", { class: "stack" }, h("div", { class: "row spread" }, h("h1", {}, `Hi ${S.user.name.split(" ")[0]}`), h("button", { class: "btn pri", onclick: newWs }, "+ New workspace")), list,
     h("p", { class: "small muted" }, `Plan: ${S.user.plan}. Up to ${d.limits.ws} workspaces.`)), "home");
 }
@@ -112,7 +112,7 @@ function boardView() {
 const boardRedraw = () => workspace(W.workspace.id, view);
 function listView() {
   const rows = W.tasks.filter(visible).sort((a, b) => a.done - b.done || (a.due || 9e15) - (b.due || 9e15));
-  if (!rows.length) return h("div", { class: "card empty" }, "No tasks match.");
+  if (!rows.length) return h("div", { class: "card empty d3e" }, "No tasks match.");
   const all = W.tasks, doneN = all.filter((t) => t.done).length, late = all.filter((t) => !t.done && t.due && t.due + 864e5 < Date.now()).length, pct = all.length ? Math.round((doneN / all.length) * 100) : 0;
   const csv = () => { const esc = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`; const head = ["Task", "Status", "Priority", "Due", "Assignee", "Done"]; const lines = [head, ...all.map((t) => [t.title, (W.cols.find((c) => c.id === t.col) || {}).name, t.prio, t.due ? new Date(t.due).toISOString().slice(0, 10) : "", who(t.assignee) || "", t.done ? "yes" : "no"])].map((r) => r.map(esc).join(",")); const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob(["\ufeff" + lines.join("\r\n")], { type: "text/csv" })); a.download = (W.workspace.name || "tasks").replace(/[^\w\u0600-\u06ff-]+/g, "-") + ".csv"; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); toast("CSV downloaded"); };
   const stats = h("div", { class: "card row spread liststats" }, h("div", { class: "grow" }, h("div", { class: "small muted" }, `${doneN} of ${all.length} done` + (late ? ` · ${late} overdue` : "")), h("div", { class: "pbar", role: "progressbar", "aria-valuenow": pct, "aria-valuemin": 0, "aria-valuemax": 100, "aria-label": "Progress" }, h("i", { style: `width:${pct}%` }))), h("button", { class: "btn sm", onclick: csv }, "Export CSV"));
@@ -179,11 +179,11 @@ async function membersView() {
 const membersViewReload = async (w) => { W = await api(`/api/w/${w}`); membersView(); };
 async function myTasks() {
   const d = await api("/api/mytasks"); await refreshUnread();
-  shell(h("div", { class: "stack" }, h("h1", {}, "My tasks"), d.tasks.length ? h("div", { class: "card tablewrap" }, h("table", {}, h("tbody", {}, d.tasks.map((t) => h("tr", { style: "cursor:pointer", onclick: () => (location.hash = `#/w/${t.ws}`) }, h("td", {}, h("div", { class: "tt" }, t.title), h("div", { class: "small muted" }, t.wsname)), h("td", {}, t.due ? fmtDate(t.due) : "-"), h("td", {}, h("span", { class: "badge" }, PR[t.prio]))))))) : h("div", { class: "card empty" }, "Nothing assigned to you. Nice.")), "my");
+  shell(h("div", { class: "stack" }, h("h1", {}, "My tasks"), d.tasks.length ? h("div", { class: "card tablewrap" }, h("table", {}, h("tbody", {}, d.tasks.map((t) => h("tr", { style: "cursor:pointer", onclick: () => (location.hash = `#/w/${t.ws}`) }, h("td", {}, h("div", { class: "tt" }, t.title), h("div", { class: "small muted" }, t.wsname)), h("td", {}, t.due ? fmtDate(t.due) : "-"), h("td", {}, h("span", { class: "badge" }, PR[t.prio]))))))) : h("div", { class: "card empty d3e" }, "Nothing assigned to you. Nice.")), "my");
 }
 async function notes() {
   const d = await api("/api/notes"); await api("/api/notes/read", {}); S.unread = 0;
-  shell(h("div", { class: "stack" }, h("h1", {}, "Inbox"), d.notes.length ? d.notes.map((n) => h("a", { class: "card", href: n.link || "#/", style: "text-decoration:none;color:inherit" }, h("div", {}, n.read ? "" : h("span", { class: "badge acc" }, "new"), " ", n.text), h("div", { class: "small muted" }, ago(n.ts)))) : h("div", { class: "card empty" }, "No notifications yet. Assignments, comments and reminders show up here.")), "notes");
+  shell(h("div", { class: "stack" }, h("h1", {}, "Inbox"), d.notes.length ? d.notes.map((n) => h("a", { class: "card", href: n.link || "#/", style: "text-decoration:none;color:inherit" }, h("div", {}, n.read ? "" : h("span", { class: "badge acc" }, "new"), " ", n.text), h("div", { class: "small muted" }, ago(n.ts)))) : h("div", { class: "card empty d3e" }, "No notifications yet. Assignments, comments and reminders show up here.")), "notes");
 }
 async function plans() { const d = await api("/api/plans"); shell(h("div", { class: "stack" }, h("h1", {}, "Plans"), plansView(d.plans, S.user.plan), h("p", { class: "muted small" }, "Paid plans are not available yet. Everything on Free works today.")), "plans"); }
 function account() {
@@ -195,7 +195,7 @@ function account() {
 }
 async function join(token) {
   const d = await api(`/api/join/${token}`).catch((e) => ({ error: e.message }));
-  if (d.error) return shell(h("div", { class: "card empty" }, h("h2", {}, "Invite problem"), h("p", {}, d.error), h("a", { class: "btn", href: "#/" }, "Go home")), "home");
+  if (d.error) return shell(h("div", { class: "card empty d3e" }, h("h2", {}, "Invite problem"), h("p", {}, d.error), h("a", { class: "btn", href: "#/" }, "Go home")), "home");
   shell(h("div", { class: "card stack auth" }, h("h2", {}, `Join ${d.workspace}`), h("p", { class: "muted" }, `You were invited as ${d.role}.`), h("button", { class: "btn pri", onclick: () => guard(async () => { const r = await api(`/api/join/${token}`, {}); W = null; location.hash = `#/w/${r.id}`; }) }, "Accept invite")), "home");
 }
 async function route() {
@@ -219,7 +219,7 @@ async function route() {
     location.hash = "#/";
   } catch (e) {
     if (e.status === 401) { S.user = null; return landing(); }
-    shell(h("div", { class: "card empty" }, h("h2", {}, "Couldn't load this page"), h("p", {}, e.message), h("a", { class: "btn", href: "#/" }, "Go home")), "home");
+    shell(h("div", { class: "card empty d3e" }, h("h2", {}, "Couldn't load this page"), h("p", {}, e.message), h("a", { class: "btn", href: "#/" }, "Go home")), "home");
   }
 }
 addEventListener("hashchange", route);
