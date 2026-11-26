@@ -93,4 +93,5 @@ th,td{padding:var(--sp-3)}
 .emptyic{width:56px;height:56px;margin:0 auto var(--sp-3);color:var(--muted);display:grid;place-items:center;border:1.5px dashed var(--border);border-radius:50%;padding:12px;box-sizing:border-box}.emptyic svg{width:100%;height:100%}
 /* admin: audit toolbar controls stay inline; stat cards fill rows evenly */
 .row>input[type=search]{flex:1 1 200px;width:auto;min-width:0}.row>select{flex:0 1 180px;width:auto}
-.grid.stats{grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr))}
+.grid.stats{grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))}
+.grid:has(>.card>.stat){grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))}
