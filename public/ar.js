@@ -2,6 +2,7 @@ import { C, CR } from "/ar-common.js";
 export const D = { ...C, "New here?": "جديد هنا؟", "Show": "عرض", "All tasks": "كل المهام", "Open only": "المفتوحة فقط", "Due today": "مستحقة اليوم", "High priority": "أولوية عالية", "Export CSV": "تصدير CSV", "CSV downloaded": "تم تنزيل ملف CSV", "Progress": "التقدم", "+ Task": "+ مهمة", "design, urgent": "تصميم، عاجل", "At least 8 characters": "8 أحرف على الأقل", "created the workspace": "أنشأ مساحة العمل", "joined the workspace": "انضم إلى مساحة العمل", "removed a member": "أزال عضواً",
   "Orbit": "مدار", "Workspaces": "مساحات العمل", "My tasks": "مهامي", "Inbox": "الوارد", "Low": "منخفضة", "Normal": "عادية", "High": "عالية", "Urgent": "عاجلة",
   "Does not repeat": "لا يتكرر", "Daily": "يومياً", "Weekdays": "أيام الأسبوع", "Weekly": "أسبوعياً", "Monthly": "شهرياً",
+  "Less chasing. More ticking things off.": "ملاحقة أقل، وإنجاز أكثر.",
   "Tasks your whole team can keep up with": "مهام يستطيع فريقك كله مواكبتها", "Workspaces, invites, kanban boards, repeating tasks, reminders and a calendar. Free for small teams.": "مساحات عمل ودعوات ولوحات كانبان ومهام متكررة وتذكيرات وتقويم. مجاني للفرق الصغيرة.",
   "Start with Orbit": "ابدأ مع مدار", "Boards": "اللوحات", "Drag tasks across columns. On a phone, use the move buttons.": "اسحب المهام بين الأعمدة. على الهاتف استخدم أزرار النقل.",
   "Repeat and remind": "كرّر وذكّر", "Daily, weekday, weekly or monthly tasks that roll forward when done.": "مهام يومية أو أسبوعية أو شهرية تنتقل للموعد التالي عند إنجازها.",
