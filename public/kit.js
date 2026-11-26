@@ -170,6 +170,11 @@ export function sessionsCard() {
     const d = await api("/api/auth/export"); const x = document.createElement("a");
     x.href = URL.createObjectURL(new Blob([JSON.stringify(d, null, 2)], { type: "application/json" })); x.download = "my-data.json"; x.click(); setTimeout(() => URL.revokeObjectURL(x.href), 2000); toast(t("Data downloaded"));
   }) }, t("Download my data")));
+  card.append(h("button", { class: "btn sm", type: "button", style: "color:#b3261e;border-color:#b3261e", onclick: () => {
+    const email = h("input", { type: "email", placeholder: t("Type your email to confirm"), autocomplete: "off" }), pw = h("input", { type: "password", placeholder: t("Password"), autocomplete: "current-password" });
+    const m = modal(t("Delete my account"), h("form", { class: "stack", onsubmit: (e) => { e.preventDefault(); guard(async () => { await api("/api/auth/delete", { confirm: email.value, password: pw.value }); m.close(); toast(t("Account deleted")); setTimeout(() => location.assign("/"), 800); }); } },
+      h("p", { class: "muted" }, t("This permanently deletes your account and your data. It can't be undone.")), email, pw, h("button", { class: "btn", style: "background:#b3261e;color:#fff;border-color:#b3261e" }, t("Delete forever"))));
+  } }, t("Delete my account")));
   return card;
 }
 

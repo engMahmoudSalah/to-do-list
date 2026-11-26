@@ -168,6 +168,15 @@ export class BaseHub extends DurableObject {
       const rows = this.q("SELECT h,created,exp,ua FROM sessions WHERE uid=? AND exp>? ORDER BY created DESC LIMIT 20", u.id, now());
       return { sessions: rows.map((r) => ({ created: r.created, ua: r.ua || "", current: r.h === cur })) };
     }
+    if (path === "/api/auth/delete" && method === "POST") {
+      const u = this.need(c); this.limit("del:" + u.id, 5, 3600e3);
+      if (!(await verifyPw(String(body.password || ""), u.pw))) { this.audit(u.id, "delete_fail"); bad("Wrong password.", 403); }
+      if (String(body.confirm || "").trim().toLowerCase() !== u.email.toLowerCase()) bad("Type your email to confirm.");
+      if (this.purgeUsers) this.purgeUsers([u.id]);
+      this.run("DELETE FROM sessions WHERE uid=?", u.id); this.run("UPDATE audit SET uid=NULL WHERE uid=?", u.id); this.run("DELETE FROM users WHERE id=?", u.id);
+      this.audit(null, "account_deleted", (await sha256(u.email)).slice(0, 10));
+      return json({ ok: true }, 200, { "set-cookie": "sid=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0" });
+    }
     if (path === "/api/auth/export" && method === "GET") {
       const u = this.need(c); this.limit("exp:" + u.id, 5, 3600e3);
       const data = this.exportData ? this.exportData(u) : {};
