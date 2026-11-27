@@ -166,6 +166,9 @@ export function sessionsCard() {
       d.sessions.length > 1 ? h("button", { class: "btn sm", type: "button", onclick: () => guard(async () => { await api("/api/auth/sessions/revoke-others", {}); toast(t("Signed out of other devices")); await load(); }) }, t("Sign out other devices")) : null].filter(Boolean));
   };
   load().catch((e) => { list.textContent = e.message; });
+  api("/api/auth/usage").then((d) => { if (!d.usage.length) return; card.before(h("div", { class: "card stack" }, h("h3", {}, h("span", {}, t("Your plan")), ": ", h("span", {}, d.plan === "pro" ? t("Pro (draft)") : t("Free"))),
+    ...d.usage.map(([label, used, max]) => h("div", { class: "stack", style: "gap:4px" }, h("div", { class: "row spread small" }, h("span", {}, t(label)), h("span", { class: "muted", dir: "ltr" }, used + " / " + max)),
+      h("div", { role: "progressbar", "aria-valuemin": 0, "aria-valuemax": max, "aria-valuenow": used, "aria-label": t(label), style: "height:8px;border-radius:99px;background:var(--border);overflow:hidden" }, h("div", { style: `height:100%;width:${Math.min(100, Math.round((used / Math.max(1, max)) * 100))}%;background:${used >= max ? "#b3261e" : "var(--accent)"}` })))))); }).catch(() => {});
   card.append(h("button", { class: "btn sm", type: "button", onclick: () => guard(async () => {
     const d = await api("/api/auth/export"); const x = document.createElement("a");
     x.href = URL.createObjectURL(new Blob([JSON.stringify(d, null, 2)], { type: "application/json" })); x.download = "my-data.json"; x.click(); setTimeout(() => URL.revokeObjectURL(x.href), 2000); toast(t("Data downloaded"));

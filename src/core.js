@@ -178,6 +178,9 @@ export class BaseHub extends DurableObject {
       this.audit(null, "account_deleted", (await sha256(u.email)).slice(0, 10));
       return json({ ok: true }, 200, { "set-cookie": "sid=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0" });
     }
+    if (path === "/api/auth/usage" && method === "GET") {
+      const u = this.need(c); return { plan: u.plan, usage: this.usage ? this.usage(u) : [] };
+    }
     if (path === "/api/auth/export" && method === "GET") {
       const u = this.need(c); this.limit("exp:" + u.id, 5, 3600e3);
       const data = this.exportData ? this.exportData(u) : {};

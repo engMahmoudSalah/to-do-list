@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS activity(id INTEGER PRIMARY KEY AUTOINCREMENT, ws TEX
     const u = this.need(c); const t = this.one("SELECT * FROM tasks WHERE id=?", id);
     if (!t) bad("Task not found.", 404); const r = this.role(t.ws, u); return { t, u, r };
   }
+  usage(u) { const l = this.lim(u); return [["Workspaces", this.one("SELECT COUNT(*) n FROM ws WHERE owner=?", u.id).n, l.ws]]; }
   beforeDelete(u) {
     for (const w of this.q("SELECT id FROM ws WHERE owner=?", u.id)) {
       const next = this.one("SELECT uid FROM members WHERE ws=? AND uid<>? ORDER BY CASE role WHEN 'admin' THEN 0 WHEN 'member' THEN 1 ELSE 2 END, joined LIMIT 1", w.id, u.id);
