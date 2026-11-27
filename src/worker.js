@@ -167,6 +167,15 @@ CREATE TABLE IF NOT EXISTS activity(id INTEGER PRIMARY KEY AUTOINCREMENT, ws TEX
           await this.rearm(); return { ok: true };
         }
       }
+      if ((m = sub.match(/^\/tasks\/([a-f0-9]+)\/duplicate$/)) && method === "POST") {
+        const T = this.one("SELECT * FROM tasks WHERE id=? AND ws=?", m[1], ws); if (!T) bad("Task not found.", 404);
+        edit(); this.limit("dup:" + u.id, 60, 600e3);
+        const lim = this.lim(this.one("SELECT plan FROM users WHERE id=?", W.owner)).tasks;
+        if (this.one("SELECT COUNT(*) n FROM tasks WHERE ws=?", ws).n >= lim) bad(`This workspace reached its ${lim}-task limit on the free plan. Pro plans are coming soon.`, 402);
+        const id = rid(7), title = (T.title.slice(0, 130) + " (copy)").slice(0, 140);
+        this.run("INSERT INTO tasks(id,ws,board,col,title,descr,assignee,prio,due,recur,remind,done,labels,pos,created_by,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", id, ws, T.board, T.col, title, T.descr, T.assignee, T.prio, T.due, T.recur, T.remind, 0, T.labels, (T.pos || 0) + 0.5, u.id, now(), now());
+        this.act(ws, u.id, `duplicated "${T.title}"`); await this.rearm(); return { id };
+      }
       if ((m = sub.match(/^\/tasks\/([a-f0-9]+)\/comments$/)) && method === "POST") {
         const T = this.one("SELECT * FROM tasks WHERE id=? AND ws=?", m[1], ws); if (!T) bad("Task not found.", 404);
         edit(); const text = clean(body.body, 1000); if (!text) bad("Write a comment first.");
