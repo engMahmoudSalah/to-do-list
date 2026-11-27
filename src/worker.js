@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS comments(id TEXT PRIMARY KEY, task TEXT NOT NULL, uid
 CREATE TABLE IF NOT EXISTS notes(id TEXT PRIMARY KEY, uid TEXT NOT NULL, text TEXT NOT NULL, link TEXT, ts INTEGER NOT NULL, read INTEGER NOT NULL DEFAULT 0);
 CREATE TABLE IF NOT EXISTS activity(id INTEGER PRIMARY KEY AUTOINCREMENT, ws TEXT NOT NULL, uid TEXT, text TEXT NOT NULL, ts INTEGER NOT NULL)`;
   }
-  adminHash() { return "3954f4c578cae100a111e4a8e3f3a02ed85d1f71944dacd76fb23b0eea2779e0"; }
+  adminHash() { return this.env.ADMIN_HASH || null; }
   lim(u) { return LIMITS[u.plan] || LIMITS.free; }
   role(ws, u) { const m = this.one("SELECT role FROM members WHERE ws=? AND uid=?", ws, u.id); if (!m) bad("Workspace not found.", 404); return m.role; }
   canEdit(r) { return r === "owner" || r === "admin" || r === "member"; }
