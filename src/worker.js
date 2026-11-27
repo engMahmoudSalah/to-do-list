@@ -175,6 +175,7 @@ CREATE TABLE IF NOT EXISTS activity(id INTEGER PRIMARY KEY AUTOINCREMENT, ws TEX
         for (const to of new Set([T.assignee, T.created_by])) if (to && to !== u.id) this.notify(to, `${u.name} commented on ${T.title}`, `#/w/${ws}`);
         return { ok: true };
       }
+      if (sub === "/activity" && method === "GET") { adm(); this.limit("act:" + u.id, 20, 3600e3); return { activity: this.q("SELECT a.ts,a.text,u.name FROM activity a LEFT JOIN users u ON u.id=a.uid WHERE a.ws=? ORDER BY a.ts DESC LIMIT 2000", ws) }; }
       if (sub === "/invites" && method === "GET") { adm(); return { invites: this.q("SELECT token,role,email,exp,uses,max_uses FROM invites WHERE ws=? AND exp>? AND uses<max_uses ORDER BY exp DESC", ws, now()) }; }
       if (sub === "/invites" && method === "POST") {
         adm(); const role = ["admin", "member", "viewer"].includes(body.role) ? body.role : "member"; const email = clean(body.email, 200).toLowerCase();
