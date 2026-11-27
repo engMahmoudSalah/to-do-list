@@ -95,3 +95,5 @@ th,td{padding:var(--sp-3)}
 .row>input[type=search]{flex:1 1 200px;width:auto;min-width:0}.row>select{flex:0 1 180px;width:auto}
 .grid.stats{grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))}
 .grid:has(>.card>.stat){grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))}
+/* account page: two columns on wide screens */
+@media (min-width:1000px){.stack[style*="max-width:520px"]{max-width:1000px!important;display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);align-items:start}.stack[style*="max-width:520px"]>h1,.stack[style*="max-width:520px"]>.muted,.stack[style*="max-width:520px"]>.btn{grid-column:1/-1}}
